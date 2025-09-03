@@ -1,4 +1,4 @@
-# Faiss-GPU RPC Vector Search Service
+# fast-v  Vector Search Service
 
 This project implements a high-performance vector search and storage service using **Faiss-GPU**, built on an efficient **MessagePack RPC** protocol. The service is designed to handle a dynamically changing vector database with real-time updates and lightning-fast search capabilities, leveraging the power of an NVIDIA GPU.
 
