@@ -1,0 +1,44 @@
+name: CI/CD Pipeline
+
+# 当代码推送到 'main' 分支或创建拉取请求时触发工作流
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+# 定义工作流中的任务
+jobs:
+  build_and_push_docker:
+    # 必须使用自托管 runner，因为它提供了 GPU 访问权限
+    runs-on: self-hosted
+
+    steps:
+      # 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 登录到 Docker Hub
+      # 使用 GitHub Secrets 来安全地存储用户名和令牌
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 构建 Docker 镜像
+      - name: Build and tag Docker image
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/faiss-gpu-rpc-service:latest .
+
+      # (可选) 运行测试
+      # 可以在这里添加您的单元测试或集成测试，以验证镜像的正确性
+      - name: Run tests (optional)
+        run: |
+          echo "Running tests..."
+          # 例如: docker run --rm faiss-gpu-rpc-service:latest python3 -c "import main_faiss; print('Tests passed')"
+
+      # 将镜像推送到 Docker Hub
+      - name: Push Docker image
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/faiss-gpu-rpc-service:latest
