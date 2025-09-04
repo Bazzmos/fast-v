@@ -13,7 +13,8 @@ on:
 jobs:
   build_and_push_docker:
     # 必须使用自托管 runner，因为它提供了 GPU 访问权限
-    runs-on: self-hosted
+    #runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       # 检出代码
